@@ -6,6 +6,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import java.time.Duration;
 
 public class LoginPage {
     private final WebDriver driver;
@@ -16,7 +17,7 @@ public class LoginPage {
 
     public LoginPage(WebDriver driver) {
         this.driver = driver;
-        wait = new WebDriverWait(driver, 30, 500);
+        wait = new WebDriverWait(driver, Duration.ofSeconds(2));
         PageFactory.initElements(driver, this);
     }
 
