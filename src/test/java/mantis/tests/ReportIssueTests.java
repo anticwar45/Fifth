@@ -1,9 +1,6 @@
 package mantis.tests;
 
 import mantis.pages.MantisSite;
-import mantis.pages.ReportIssuePage;
-import mantis.pages.ViewIssueDetailsPage;
-import mantis.pages.ViewIssuesPage;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -14,18 +11,13 @@ import java.time.Duration;
 public class ReportIssueTests extends BaseTest {
 
     private MantisSite mantisSite;
-    private ReportIssuePage reportIssuePage;
     private SoftAssertions softAssert;
     private WebDriverWait wait;
-    private ViewIssuesPage viewIssuesPage;
-    private ViewIssueDetailsPage viewIssueDetailsPage;
 
     @Test
     public void positiveAddDeleteIssue() {
         mantisSite = new MantisSite(driver);
-        reportIssuePage = new ReportIssuePage(driver);
-        viewIssuesPage = new ViewIssuesPage(driver);
-        viewIssueDetailsPage = new ViewIssueDetailsPage(driver);
+
         softAssert = new SoftAssertions();
         wait = new WebDriverWait(driver, Duration.ofSeconds(5));
 
@@ -35,17 +27,17 @@ public class ReportIssueTests extends BaseTest {
         String description = "Description#1";
         String bugReportSuccessUrl = "https://academ-it.ru/mantisbt/bug_report.php?posted=1";
 
-        reportIssuePage.fillReportIssueRequiredFields(summary, description);
-        reportIssuePage.submitForm();
+        mantisSite.getReportIssuePage().fillReportIssueRequiredFields(summary, description);
+        mantisSite.getReportIssuePage().submitForm();
         softAssert.assertThat(driver.getCurrentUrl()).isEqualTo(bugReportSuccessUrl);
         wait.until(ExpectedConditions.titleContains("View Issues - MantisBT"));
-        viewIssuesPage.goToLastAddIssue();
+        mantisSite.getViewIssuesPage().goToLastAddIssue();
 
-        String id = viewIssueDetailsPage.getId();
-        softAssert.assertThat(viewIssueDetailsPage.getSummary()).isEqualTo(viewIssueDetailsPage.getId() + ": " + summary);
-        softAssert.assertThat(viewIssueDetailsPage.getDescription()).isEqualTo(description);
-        viewIssueDetailsPage.deleteIssue();
-        softAssert.assertThat(viewIssuesPage.getLastAddIssueId()).isNotEqualTo(id);
+        String id = mantisSite.getViewIssueDetailsPage().getId();
+        softAssert.assertThat(mantisSite.getViewIssueDetailsPage().getSummary()).isEqualTo(mantisSite.getViewIssueDetailsPage().getId() + ": " + summary);
+        softAssert.assertThat(mantisSite.getViewIssueDetailsPage().getDescription()).isEqualTo(description);
+        mantisSite.getViewIssueDetailsPage().deleteIssue();
+        softAssert.assertThat(mantisSite.getViewIssuesPage().getLastAddIssueId()).isNotEqualTo(id);
 
         softAssert.assertAll();
     }
